@@ -1,5 +1,7 @@
 # 预警报订正系统 前端工程
 
+# 一. 工程启动流程说明：
+
 ## 1. 安装
 ```
 1.控制台默认目录下依次安装nodejs，npm(新版nodejs自带)，cnpm, vue-cil：
@@ -21,3 +23,6 @@ npm install （如果速度问题可以使用cnpm）
 npm run serve
 如在浏览器出现VUE的log及Welcome to Your Vue.js App的字样 则说明成功
 ```
+# 二. 工程目录说明：
+
+## 1. 工程目录结构
