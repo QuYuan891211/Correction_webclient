@@ -7,9 +7,8 @@
 　　1.2 检查是否安装成功：分别输入node -v，npm -v,  如果输出版本号，说明我们安装node环境成功
     1.3 安装cnpm,命令如下: npm install -g cnpm --registry=https://registry.npm.taobao.org
         输入cnpm -v检查是否安装成功了
-    
-  npm install --global vue-cli
-  npm install -g webpack
+    1.4 安装vue脚手架工程，命令如下：npm install --global vue-cli
+    1.5 安装webpack,命令如下：npm install -g webpack
 ```
 
 
