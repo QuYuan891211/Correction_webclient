@@ -26,3 +26,4 @@ npm run serve
 # 二. 工程目录说明：
 
 ## 1. 工程目录结构
+![](overview_image/1.png)
