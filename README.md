@@ -1,28 +1,72 @@
-# 预警报订正系统 前端工程
+# neargoos 前端工程
 
-# 一. 工程启动流程说明：
+## 安装
 
-## 1. 安装
 ```
-1.控制台默认目录下依次安装nodejs，npm(新版nodejs自带)，cnpm, vue-cil：
-　　1.1 nodejs下载地址为：https://nodejs.org/en/
-　　1.2 检查是否安装成功：分别输入node -v，npm -v,  如果输出版本号，说明我们安装node环境成功
-    1.3 安装cnpm,命令如下: npm install -g cnpm --registry=https://registry.npm.taobao.org
-        输入cnpm -v检查是否安装成功了
-    1.4 安装vue脚手架工程，命令如下：npm install --global vue-cli
-    1.5 安装webpack,命令如下：npm install -g webpack
+1.控制台依次安装nodejs，npm(新版nodejs自带), express，cnpm, vue-cil,webpack 相关命令如下：
+  npm config set prefix "XXXX\nodejs\node_global"
+  npm config set cache"XXXX\nodejs\node_cache"
+  npm install express -g
+  npm install -g cnpm --registry=https://registry.npm.taobao.org
+  npm install --global vue-cli
+  npm install -g webpack
 ```
-### 2. 初始化工程
+### 初始化工程
+
 ```
-在VSCODE中打开correction-webclient文件夹，然后在菜单栏选择Terminal，在终端中输入以下命令：
 npm install （如果速度问题可以使用cnpm）
 ```
-### 3. 启动
-```
-在终端中输入以下命令：
-npm run serve
-如在浏览器出现VUE的log及Welcome to Your Vue.js App的字样 则说明成功
-```
-# 二. 工程目录说明：
+### 启动
 
-## 1. 工程目录结构
+```
+npm run serve
+```
+
+## 项目目录说明
+
+<pre><code>
+├──./                             <=vue前端项目工程
+├──README.MD  
+├── document                      <=一些遇见的问题的归档 
+├── src                           <=项目源代码  
+│ ├── views 
+│ │  ├── content                  <= 内容页面 ，我习惯将所有的view跳转到的主要的view视图页面放置于此 
+│ │  ├── footer                   <= footer 放置于此处
+│ │  ├── header                   <= header 放置于此处
+│ │  ├── x member x               <= 我之前是将全局的组件放置在members中，本项目不再使用此种方式  
+├── components                     <= 将全局的组件放在此处
+│ ├── xx_a                         <= xx_a 视图组件
+│ │ ├── base                       <= xx_a 的基础组件
+│ │ ├── bar                        <= xx_a 的bar组件
+│ ├── common                       <= 一些公共的组件
+├── router                         <= vue的router文件在此
+├── store                          <= vuex 的所在路径
+├── App.vue                        <= vue的起始视图页面，在 main.ts文件中引用 
+├── main.ts                        <= vue的入口文件，我们使用了ts，所以为.ts 
+</code></pre>
+
+还有一些额外的说明
+
+```
+├── App.vue             <= 以前是将header与footer直接写在此处，由于此项目的实际home页面并没有header与footer，所以此处只有一个路由视图
+│ ├── views
+│ │  ├── Home.vue       <=  为不含header与footer的首页
+│ │  ├── Content.vue    <=  保留header与footer组件的基础页面，其中会嵌套子路由
+```
+
+### 技术路线说明
+
+vue + vuex + vue-router+webpack+es6+less
+
+- 新加入了打包下载功能，主要包含打包下载页面的页面有 `data` 与 `product`  
+  目前考虑的实现方式：  
+  1- 先下载文件  
+  2- zip压缩  
+  3- 生成最终的文件    
+  
+[参考的文章](https://www.mmxiaowu.com/article/59b23f5d5b06a403cf687ed6)
+
+
+### 引用的一些组件
+
+使用了`vue-property-decorator`
