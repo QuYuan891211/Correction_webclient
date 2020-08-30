@@ -8,24 +8,23 @@
           <img src="/images/logo/nmefclog.png" />
         </div>
         <ul>
-          <li><router-link :to="{ path: '/' }">首页</router-link></li>
           <li>
-            <router-link :to="{ path: '/content/Data' }"
-              >数据订正</router-link
-            >
+            <router-link :to="{ path: '/' }">首页</router-link>
+          </li>
+          <li>
+            <router-link :to="{ path: '/content/Data' }">数据订正</router-link>
           </li>
           <li>
             <router-link :to="{ path: '/content/Text' }">文本订正</router-link>
           </li>
           <li>
-            <router-link :to="{ path: '/content/History' }"
-              >历史记录</router-link
-            >
+            <router-link :to="{ path: '/content/History' }">历史记录</router-link>
           </li>
-                    <li>
-            <router-link :to="{ path: '/content/Product' }"
-              >产品制作</router-link
-            >
+          <li>
+            <router-link :to="{ path: '/content/Product' }">产品制作</router-link>
+          </li>
+          <li>
+            <router-link :to="{ path: '/content/Relation' }">关系管理</router-link>
           </li>
         </ul>
       </div>
@@ -35,9 +34,7 @@
         <h1>预警报智能订正系统</h1>
         <!-- <button class="btn btn-default">Download Data</button> -->
         <button class="btn btn-default">
-          <router-link :to="{ path: '/content/data' }"
-            >登录</router-link
-          >
+          <router-link :to="{ path: '/content/data' }">登录</router-link>
         </button>
       </div>
     </div>
@@ -57,21 +54,25 @@
             <span class="caret"></span>
           </button>
           <ul class="dropdown-menu">
-          <li><a href="http://www.nmefc.cn/">国家海洋环境预报中心</a></li>
-         <li><a href="http://www.oceanguide.org.cn/IndexHome">中国海洋预报网</a></li>
-         <li><a href="http://neargoos.nmefc.cn:8080/exchange/index.jsp">neargoos中国实时数据库</a></li>
+            <li>
+              <a href="http://www.nmefc.cn/">国家海洋环境预报中心</a>
+            </li>
+            <li>
+              <a href="http://www.oceanguide.org.cn/IndexHome">中国海洋预报网</a>
+            </li>
+            <li>
+              <a href="http://neargoos.nmefc.cn:8080/exchange/index.jsp">neargoos中国实时数据库</a>
+            </li>
           </ul>
         </div>
       </div>
 
       <!-- 版权 -->
       <div class="copyright">
-                          <div class="title">
-         <h4> 版权所有 </h4>
+        <div class="title">
+          <h4>版权所有</h4>
         </div>
-      <h4>
-        Copyright ©2020 国家海洋环境预报中心 
-      </h4>
+        <h4>Copyright ©2020 国家海洋环境预报中心</h4>
       </div>
     </footer>
   </div>
@@ -106,7 +107,7 @@ export default {
       @minortitle();
 
       h1 {
-        font-size: 5rem;
+        font-size: 3.5rem;
       }
       button {
         width: 200px;

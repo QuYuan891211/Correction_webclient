@@ -6,6 +6,7 @@ import History from "../views/content/History.vue";
 import Product from "../views/content/Product.vue";
 import Text from "../views/content/Text.vue";
 import Data from "../views/content/Data.vue";
+import Relation from"../views/content/Relation.vue";
 Vue.use(VueRouter);
 
 const routes = [
@@ -35,6 +36,11 @@ const routes = [
       {
         path: "Product",
         component: Product,
+        meta: []
+      },
+      {
+        path: "Relation",
+        component: Relation,
         meta: []
       },
       {
