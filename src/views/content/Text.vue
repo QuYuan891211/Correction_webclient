@@ -2,15 +2,18 @@
   <div class="center">
     <div class="center-header">
       <!-- 统计的title -->
-      <div class="title">文本订正</div>
+      <div class="title"><h1>文本订正</h1></div>
       <br />
     </div>
     <div class="center-center">
       <div class="center-center-left">
         <div class="card-form">
-          <div class="sub-title">文本信息：</div>
+          
           <div class="body">
             <ul>
+              <li>
+                <div class="sub-title">文本信息：</div>
+              </li>
               <li>
                 创建日期:
                 <!-- <span>{{text_result.beginTime}}</span> -->
@@ -34,28 +37,28 @@
               <li>
                 <el-button
                 type="info"
-                class="btn_loadText"
+                class="btn_text_type1"
                 @click="loadText"
               >加载前一日文本内容</el-button>
               </li>
               <li>
                 <el-button
                 type="info"
-                class="btn_confirm_forcaster"
+                class="btn_text_type1"
                 @click="loadText"
               >预报员确认完成</el-button>
               </li>
               <li>
                 <el-button
                 type="info"
-                class="btn_confirm_checker"
+                class="btn_text_type2"
                 @click="loadText"
               >审核员确认完成</el-button>
               </li>
               <li>
                 <el-button
                 type="info"
-                class="btn_cancel_checker"
+                class="btn_text_type2"
                 @click="loadText"
               >审核员取消确认</el-button>
               </li>
@@ -94,7 +97,7 @@
           <li>
 
               <el-form-item>
-    <el-input type="textarea" :rows="2" v-model="data1"></el-input>
+    <el-input class="textArea" type="textarea" :rows="5" v-model="data1"></el-input>
 </el-form-item>
 
           </li>
@@ -104,7 +107,7 @@
           <li>
 
               <el-form-item>
-    <el-input type="textarea" :rows="2" v-model="data1"></el-input>
+    <el-input class="textArea" type="textarea" :rows="5" v-model="data1"></el-input>
 </el-form-item>
 
           </li>
@@ -114,7 +117,7 @@
           <li>
 
               <el-form-item>
-    <el-input type="textarea" :rows="2" v-model="data1"></el-input>
+    <el-input class="textArea" type="textarea" :rows="5" v-model="data1"></el-input>
 </el-form-item>
 
           </li>
@@ -174,6 +177,14 @@ export default class TextView extends Vue {
 @bluebackground: {
   background: rgba(51, 204, 204, 1);
 };
+//浅黄按钮背景
+@lightyellowbackground: {
+  background: rgb(216, 191, 50);
+};
+//深黄按钮背景
+@darkyellowbackground: {
+  background: rgb(230, 145, 34);
+};
 //灰色背景
 @graybackground: {
   background: rgba(215, 215, 215, 0.7);
@@ -203,6 +214,8 @@ export default class TextView extends Vue {
   @bluebackground();
   @margindefault();
   @borderradius();
+  margin-left: 200px;
+  margin-right: 200px;
   // 中间部分
   // 横向排列
   .center-header {
@@ -215,7 +228,7 @@ export default class TextView extends Vue {
     .title {
       display: flex;
       justify-content: flex-start;
-      font-size: 6rem;
+      font-size: 8rem;
       @minortitle();
     }
   }
@@ -223,10 +236,11 @@ export default class TextView extends Vue {
   .center-center {
     display: flex;
     flex-direction: row;
-    justify-content: center;
+    // justify-content: space-around;
     .center-center-left {
       display: flex;
       flex-direction: column;
+      margin-left: 50px;
       .card-form {
         display: flex;
         flex: 1;
@@ -234,17 +248,30 @@ export default class TextView extends Vue {
         // 注意此处为副轴方
         font-family: Arial, Helvetica, sans-serif;
         text-shadow: 2px 2px 10px #000;
-        .sub-title {
-          font-size: 1.5rem;
-          color: white;
-        }
         .body {
           ul {
             li {
               line-height: 3em;
               color: white;
-              font-size: 1rem;
+              font-size: 1.5rem;
               list-style: none;
+              text-align:left;
+              .btn_text_type1{
+                color: white;
+                font-size: 1.5rem;
+                width: 270px;
+                border:none;
+                @lightyellowbackground()
+
+              }
+              .btn_text_type2{
+                color: white;
+                font-size: 1.5rem;
+                width: 270px;
+                border:none;
+                @darkyellowbackground()
+
+              }
             }
           }
         }
@@ -258,6 +285,8 @@ export default class TextView extends Vue {
     .center-center-right {
       display: flex;
       flex-direction: column;
+      // justify-content: flex-start;
+      margin-left: 150px;
       .content-form {
         display: flex;
         flex: 1;
@@ -267,10 +296,15 @@ export default class TextView extends Vue {
         text-shadow: 2px 2px 10px #000;
           ul {
             li {
+              text-align:left;
               line-height: 3em;
               color: white;
-              font-size: 1rem;
+              font-size: 1.5rem;
               list-style: none;
+              .textArea{
+                width: 800px;
+                overflow-x:hidden;
+              }
             }
           }
         
