@@ -15,24 +15,24 @@
                 <div class="sub-title">文本信息：</div>
               </li>
               <li>
-                创建日期:
-                <!-- <span>{{text_result.beginTime}}</span> -->
+                创建日期 :
+                <span>{{textData_selected_byTid.gmtCreate}}</span>
               </li>
               <li>
-                更新日期:
-                <!-- <span>{{text_result.endTime}}</span> -->
+                更新日期 :
+                <span>{{textData_selected_byTid.gmtModified}}</span>
               </li>
               <li>
-                是否已审核:
-                <!-- <span>{{text_result.isCheck}}</span> -->
+                是否已审核 :
+                <span>{{textData_selected_byTid.isok}}</span>
               </li>
               <li>
-                预报员:
-                <!-- <span>{{text_result.forcaster}}</span> -->
+                预报员 :
+                <span>{{textData_selected_byTid.forecaster}}</span>
               </li>
               <li>
-                审核人:
-                <!-- <span>{{text_result.checker}}</span> -->
+                审核人 :
+                <span>{{textData_selected_byTid.checker}}</span>
               </li>
               <li>
                 <el-button
@@ -79,12 +79,12 @@
           <div class="form-select-mission">
 
           <el-form-item>
-            <el-select v-model="mission_selected" value-key="id" placeholder="请选择文本模板">
+            <el-select v-model="textInfo_selected" value-key="id" @change="loadTextDataAndTextDetail" placeholder="请选择文本模板">
               <el-option
-                v-for="item in mission_list"
-                :key="item.id"
-                :label="item.name"
-                :value="item.id"
+                v-for="item in textInfo_list"
+                :key="item.tid"
+                :label="item.tName"
+                :value="item.tid"
               ></el-option>
             </el-select>
           </el-form-item>
@@ -136,32 +136,101 @@ import JSZip from 'jszip';
 import FileSaver from 'file-saver';
 import moment from 'moment';
 import countTo from 'vue-count-to';
-const host = 'http://localhost:8083';
+const host = 'http://localhost:8001';
 @Component({
   components: { countTo },
 })
 export default class TextView extends Vue {
-  mission_selected: any = null;
-  mission_list: any = [];
+  //绑定下拉框选中的文本模板tid
+  textInfo_selected: any = null;
+  textData_selected_byTid: any = [];
+  //绑定后台返回的文本模板
+  textInfo_list:any = [];
   text_result: any = null;
   url: any = null;
   tempdata: any = null;
   pictLoading = false;
   loadingBtn = false;
   data1 : any = null;
+  isOk :any = null;
   // lifecycle hook
-  mounted() {}
+  mounted() {
+    //获取全部文本模板（TextInfo）并加载到下拉列表中
+    getAllTextInfo().then((res:any)=>
+      {
+          if(res.status === 200){
+            if(res.data.code === 200){
+                this.textInfo_list = res.data.data
+            }else{
+              alert(res.data.message)
+            }
+          }else{
+            alert('获取文本模板失败')
+          }
+      }
+    )
+
+  }
 
   //computed
   get computedTest() {
     return null;
   }
 
-  //methods
   loadText(){
 
   }
+  //将选中的文本模板tid传给后台，后台返回TextData和TextDetail数据调整格式后绑定
+  loadTextDataAndTextDetail(){
+    // alert(this.textInfo_selected)
+    //1. 将选中的模板tid发到后台
+    let url =  `${host}/textData/textData`
+    let data = {'id':this.textInfo_selected}
+    axios.post(url,data).then(res=>{
+      // alert('发送请求')
+      
+      if(res.status ===200){
+        //2. 接受返回的TextData对象（只有1个或null)
+         if(res.data.code === 200){
+         this.textData_selected_byTid = res.data.data[0]
+        //3. 调整日期格式
+        if(null != this.textData_selected_byTid && null != this.textData_selected_byTid.gmtCreate){
+          this.textData_selected_byTid.gmtCreate = moment(this.textData_selected_byTid.gmtCreate).format('YYYY-MM-DD HH:mm:ss')
+        }
+        if(null != this.textData_selected_byTid && null != this.textData_selected_byTid.gmtModified){
+          this.textData_selected_byTid.gmtModified = moment(this.textData_selected_byTid.gmtModified).format('YYYY-MM-DD HH:mm:ss')
+        }
+        if(null != this.textData_selected_byTid && this.textData_selected_byTid.isok){
+          
+            this.textData_selected_byTid.isok = "已审核"
+        }else{
+            this.textData_selected_byTid.isok = "未审核"
+        }
+         }else{
+           alert(res.data.message)
+         }
+      }else{
+        alert('获取文本内容信息失败')
+      }
+    }).catch(err=>{
+      alert('请联系系统管理员')
+    });
+
+  }
 }
+ //methods
+  ///获取全部文本模板（TextInfo）
+   const getAllTextInfo = ()=>{
+     let url = `${host}/textInfo/textInfoListByDepartment`
+     return axios.get(
+       url,
+       {
+         params:[]
+       }
+     )
+  }
+ 
+
 </script>
 <style scoped lang="less">
 @import '../styles/base.less';
