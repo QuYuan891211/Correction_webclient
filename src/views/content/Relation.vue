@@ -21,6 +21,8 @@
               
             ><!-- @cell-click="cellClick" -->
               <el-table-column prop="mName" label="任务名称"></el-table-column>
+              <el-table-column prop="eName" label="要素名称"></el-table-column>
+              <el-table-column prop="sName" label="站点名称"></el-table-column>
               <el-table-column
                 v-for="(item, index) in table_labels"
                 :key="index"

@@ -13,40 +13,47 @@
             <ul>
               <li>
                 <div class="sub-title">文本信息：</div>
+                <span><textarea v-model="textData_id
+                "></textarea></span>
               </li>
               <li>
                 创建日期 :
-                <span>{{textData_selected_byTid.gmtCreate}}</span>
+                <span><textarea v-model="textData_gmtCreate
+                "></textarea></span>
               </li>
               <li>
                 更新日期 :
-                <span>{{textData_selected_byTid.gmtModified}}</span>
+                <span><textarea v-model="textData_gmtModified
+                "></textarea></span>
               </li>
               <li>
                 是否已审核 :
-                <span>{{textData_selected_byTid.isok}}</span>
+                <span><textarea v-model="textData_isok
+                "></textarea></span>
               </li>
               <li>
                 预报员 :
-                <span>{{textData_selected_byTid.forecaster}}</span>
+                <span><textarea v-model="textData_forecaster
+                "></textarea></span>
               </li>
               <li>
                 审核人 :
-                <span>{{textData_selected_byTid.checker}}</span>
+                <span><textarea v-model="textData_checker
+                "></textarea></span>
               </li>
               <li>
                 <el-button
                 type="info"
                 class="btn_text_type1"
-                @click="loadText"
+                @click="getLastDayTextDetail"
               >加载前一日文本内容</el-button>
               </li>
               <li>
                 <el-button
                 type="info"
                 class="btn_text_type1"
-                @click="loadText"
-              >预报员确认完成</el-button>
+                @click="saveTextData"
+              >保存当日预报文本</el-button>
               </li>
               <li>
                 <el-button
@@ -97,7 +104,8 @@
           <li>
 
               <el-form-item>
-    <el-input class="textArea" type="textarea" :rows="5" v-model="data1"></el-input>
+    <textarea class="textArea" v-model="text1
+                "></textarea>
 </el-form-item>
 
           </li>
@@ -107,7 +115,8 @@
           <li>
 
               <el-form-item>
-    <el-input class="textArea" type="textarea" :rows="5" v-model="data1"></el-input>
+    <textarea class="textArea" v-model="text2
+                "></textarea>
 </el-form-item>
 
           </li>
@@ -117,7 +126,8 @@
           <li>
 
               <el-form-item>
-    <el-input class="textArea" type="textarea" :rows="5" v-model="data1"></el-input>
+    <textarea class="textArea" v-model="text3
+                "></textarea>
 </el-form-item>
 
           </li>
@@ -143,7 +153,17 @@ const host = 'http://localhost:8001';
 export default class TextView extends Vue {
   //绑定下拉框选中的文本模板tid
   textInfo_selected: any = null;
-  textData_selected_byTid: any = [];
+  textData_id: any = null;
+  textData_gmtCreate: any = null;
+  textData_gmtModified: any = null;
+  textData_isok: any = null;
+  textData_forecaster: any = null;
+  textData_checker: any = null;
+  textData_selected_byTid: any =[];
+  textDetail_selected_byTextDataId : any = [];
+  text1:any = null;
+  text2:any = null;
+  text3:any = null;
   //绑定后台返回的文本模板
   textInfo_list:any = [];
   text_result: any = null;
@@ -180,43 +200,169 @@ export default class TextView extends Vue {
   loadText(){
 
   }
-  //将选中的文本模板tid传给后台，后台返回TextData和TextDetail数据调整格式后绑定
-  loadTextDataAndTextDetail(){
-    // alert(this.textInfo_selected)
-    //1. 将选中的模板tid发到后台
-    let url =  `${host}/textData/textData`
-    let data = {'id':this.textInfo_selected}
-    axios.post(url,data).then(res=>{
-      // alert('发送请求')
+  //将选中的文本模板tid传给后台，后台返回TextData数据调整格式后绑定
+  async loadTextDataAndTextDetail(){
+    
+    let did = await this.loadTextData()
+    this.loadTextDeatail(did)
+    
+  }
+
+  //根据TextData id 获取TextDetail
+  loadTextDeatail(id:any){
+    //将查询的TextDatat的id传给后台，后台返回TextDetail数据后绑定
+   let url_getTextDetail =  `${host}/textDetail/getTextDetail`
+
+  let did = {'id':id} 
+   axios.post(url_getTextDetail,did).then(res=>{
       
       if(res.status ===200){
-        //2. 接受返回的TextData对象（只有1个或null)
+        //2. 接受返回的TextDetail对象（List)并封装
          if(res.data.code === 200){
-         this.textData_selected_byTid = res.data.data[0]
-        //3. 调整日期格式
-        if(null != this.textData_selected_byTid && null != this.textData_selected_byTid.gmtCreate){
-          this.textData_selected_byTid.gmtCreate = moment(this.textData_selected_byTid.gmtCreate).format('YYYY-MM-DD HH:mm:ss')
-        }
-        if(null != this.textData_selected_byTid && null != this.textData_selected_byTid.gmtModified){
-          this.textData_selected_byTid.gmtModified = moment(this.textData_selected_byTid.gmtModified).format('YYYY-MM-DD HH:mm:ss')
-        }
-        if(null != this.textData_selected_byTid && this.textData_selected_byTid.isok){
-          
-            this.textData_selected_byTid.isok = "已审核"
-        }else{
-            this.textData_selected_byTid.isok = "未审核"
-        }
+           alert(res.data.data.length)
+           if(res.data.data.length > 2){
+              this.text1 = res.data.data[0].text
+             this.text2 = res.data.data[1].text
+             this.text3 = res.data.data[2].text
+           }else{
+             alert('预报文本不足三天预报内容，请联系管理员')
+           }
+
          }else{
            alert(res.data.message)
          }
       }else{
-        alert('获取文本内容信息失败')
+        alert('未知错误，请联系系统管理员')
+      }
+   }).catch(err=>{
+     alert(err.toString())
+   });
+  }
+  //根据Tid获取TextData
+  loadTextData(){
+    return new Promise((resolve,reject)=>{
+        //1. 将选中的模板tid发到后台
+    let url =  `${host}/textData/textData`
+    let data = {'id':this.textInfo_selected}
+     axios.post(url,data).then(res=>{
+      // alert('发送请求')
+      if(res.status ===200){
+        //2. 接受返回的TextData对象（只有1个或null)
+         if(res.data.code === 200){
+         this.textData_selected_byTid = res.data.data[0]
+         this.textData_id = this.textData_selected_byTid.id
+         this.textData_checker = this.textData_selected_byTid.checker
+         this.textData_forecaster = this.textData_selected_byTid.forecaster
+        //3. 调整日期格式
+        if(null != this.textData_selected_byTid && null != this.textData_selected_byTid.gmtCreate){
+          this.textData_gmtCreate = moment(this.textData_selected_byTid.gmtCreate).format('YYYY-MM-DD HH:mm:ss')
+        }
+        if(null != this.textData_selected_byTid && null != this.textData_selected_byTid.gmtModified){
+          this.textData_gmtModified= moment(this.textData_selected_byTid.gmtModified).format('YYYY-MM-DD HH:mm:ss')
+        }
+        if(null != this.textData_selected_byTid && this.textData_selected_byTid.isok){
+          
+            this.textData_isok = "已审核"
+        }else{
+            this.textData_isok  = "未审核"
+        }
+        resolve(this.textData_id)
+         }else{
+           reject(res.data.message)
+         }
+      }else{
+        reject('发生未知错，误请联系系统管理员')
       }
     }).catch(err=>{
-      alert('请联系系统管理员')
+      reject(err.toString())
     });
 
+
+    })
+        
   }
+  //获取前一天的文本内容
+  getLastDayTextDetail(){
+    let url = `${host}/textDetail/lastDay`
+    let data = {'id':this.textInfo_selected} 
+         axios.post(url,data).then(res=>{
+      // alert('发送请求')
+      if(res.status ===200){
+        //2. 接受返回的TextData对象（只有1个或null)
+         if(res.data.code === 200){
+          if(res.data.data.length > 2){
+              this.text1 = res.data.data[0].text
+             this.text2 = res.data.data[1].text
+             this.text3 = res.data.data[2].text
+           }else{
+             alert('预报文本不足三天预报内容，请联系管理员')
+           }
+         }else{
+           alert(res.data.message)
+         }
+      }else{
+        alert('发生未知错，误请联系系统管理员')
+      }
+    }).catch(err=>{
+      alert(err.toString())
+    });
+  }
+//保存当日预报的文本TEXTData和文本内容TextDetail
+saveTextData(){
+  
+  let url = `${host}/textData/checkByForecaster`
+    var textDetail_list = [this.text1,this.text2,this.text3]
+    let data = {
+      'id':this.textData_id,
+      'textDetailList':textDetail_list
+      } 
+         axios.post(url,data).then(res=>{
+      // alert('发送请求')
+      if(res.status ===200){
+        //2. 接受返回的TextData对象（只有1个或null)
+         if(res.data.code === 200){
+           alert('保存成功')
+         }else{
+           alert(res.data.message)
+         }
+      }else{
+        alert('发生未知错，误请联系系统管理员')
+      }
+    }).catch(err=>{
+      alert(err.toString())
+    });
+
+}
+// //保存文本内容
+// saveTextDetail(id:any){
+//   let url = `${host}/textDetail/saveTextDetail`
+//   alert(id)
+//   var text_list = [this.text1,this.text2,this.text3]
+//   let data = {'id':id,
+//   'text1':this.text1,
+//   'text2':this.text2,
+//   't'
+  
+//   }
+//   axios.post(url,data).then(res=>{
+//       // alert('发送请求')
+//       if(res.status ===200){
+//         //2. 接受返回的TextData对象（只有1个或null)
+//          if(res.data.code === 200){
+//           alert('成功存入当天文本内容')
+//          }else{
+//            alert(res.data.message)
+//          }
+//       }else{
+//         alert('发生未知错，误请联系系统管理员')
+//       }
+//     }).catch(err=>{
+//       alert(err.toString())
+//     });
+// }
+
+
+//保存
 }
  //methods
   ///获取全部文本模板（TextInfo）
