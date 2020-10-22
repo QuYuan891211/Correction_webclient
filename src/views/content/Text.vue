@@ -13,33 +13,33 @@
             <ul>
               <li>
                 <div class="sub-title">文本信息：</div>
-                <span><textarea v-model="textData_id
+                <span><textarea style="display:none;" v-model="textData_id
                 "></textarea></span>
               </li>
               <li>
-                创建日期 :
-                <span><textarea v-model="textData_gmtCreate
-                "></textarea></span>
+                文本创建日期 :
+                <span>{{textData_gmtCreate
+                }}</span>
               </li>
               <li>
-                更新日期 :
-                <span><textarea v-model="textData_gmtModified
-                "></textarea></span>
+                文本更新日期 :
+                <span>{{textData_gmtModified
+                }}</span>
               </li>
-              <li>
+              <!-- <li>
                 是否已审核 :
                 <span><textarea v-model="textData_isok
                 "></textarea></span>
-              </li>
+              </li> -->
               <li>
                 预报员 :
-                <span><textarea v-model="textData_forecaster
-                "></textarea></span>
+                <span>{{textData_forecaster
+                }}</span>
               </li>
               <li>
                 审核人 :
-                <span><textarea v-model="textData_checker
-                "></textarea></span>
+                <span>{{textData_checker
+                }}</span>
               </li>
               <li>
                 <el-button
@@ -53,20 +53,20 @@
                 type="info"
                 class="btn_text_type1"
                 @click="saveTextData"
-              >保存当日预报文本</el-button>
+              >预报员保存当日文本</el-button>
               </li>
               <li>
                 <el-button
                 type="info"
                 class="btn_text_type2"
-                @click="loadText"
+                @click="check"
               >审核员确认完成</el-button>
               </li>
               <li>
                 <el-button
                 type="info"
                 class="btn_text_type2"
-                @click="loadText"
+                @click="cancelCheck"
               >审核员取消确认</el-button>
               </li>
             </ul>
@@ -99,7 +99,7 @@
           </div>
           </li>
           <li>
-          <div class="title-text">第一天预报文本：</div>
+          <div class="title-text">第一天预报文本内容：</div>
           </li>
           <li>
 
@@ -110,7 +110,7 @@
 
           </li>
                     <li>
-          <div class="title-text">第二天预报文本：</div>
+          <div class="title-text">第二天预报文本内容：</div>
           </li>
           <li>
 
@@ -121,7 +121,7 @@
 
           </li>
                     <li>
-          <div class="title-text">第三天预报文本：</div>
+          <div class="title-text">第三天预报文本内容：</div>
           </li>
           <li>
 
@@ -219,7 +219,7 @@ export default class TextView extends Vue {
       if(res.status ===200){
         //2. 接受返回的TextDetail对象（List)并封装
          if(res.data.code === 200){
-           alert(res.data.data.length)
+          //  alert(res.data.data.length)
            if(res.data.data.length > 2){
               this.text1 = res.data.data[0].text
              this.text2 = res.data.data[1].text
@@ -259,12 +259,6 @@ export default class TextView extends Vue {
         }
         if(null != this.textData_selected_byTid && null != this.textData_selected_byTid.gmtModified){
           this.textData_gmtModified= moment(this.textData_selected_byTid.gmtModified).format('YYYY-MM-DD HH:mm:ss')
-        }
-        if(null != this.textData_selected_byTid && this.textData_selected_byTid.isok){
-          
-            this.textData_isok = "已审核"
-        }else{
-            this.textData_isok  = "未审核"
         }
         resolve(this.textData_id)
          }else{
@@ -322,6 +316,8 @@ saveTextData(){
         //2. 接受返回的TextData对象（只有1个或null)
          if(res.data.code === 200){
            alert('保存成功')
+           //刷新页面的TextData信息
+           this.loadTextData()
          }else{
            alert(res.data.message)
          }
@@ -333,6 +329,50 @@ saveTextData(){
     });
 
 }
+
+check(){
+  let url = `${host}/textData/lastCheck`
+  let data = {
+      'id':this.textData_id,
+      } 
+  axios.post(url,data).then(res=>{
+          if(res.status ===200){
+        //2. 接受返回的TextData对象（只有1个或null)
+         if(res.data.code === 200){
+          alert('审核员取消确认成功')
+          //刷新页面的TextData信息
+          this.loadTextData()
+         }else{
+           alert(res.data.message)
+         }
+      }else{
+        alert('发生未知错，误请联系系统管理员')
+      }
+  })
+
+}
+cancelCheck(){
+  let url = `${host}/textData/cancelLastCheck`
+  let data = {
+      'id':this.textData_id,
+      } 
+  axios.post(url,data).then(res=>{
+          if(res.status ===200){
+        //2. 接受返回的TextData对象（只有1个或null)
+         if(res.data.code === 200){
+          alert('审核员确认成功')
+          //刷新页面的TextData信息
+          this.loadTextData()
+         }else{
+           alert(res.data.message)
+         }
+      }else{
+        alert('发生未知错，误请联系系统管理员')
+      }
+  })
+
+}
+  
 // //保存文本内容
 // saveTextDetail(id:any){
 //   let url = `${host}/textDetail/saveTextDetail`
