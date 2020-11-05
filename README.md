@@ -73,9 +73,9 @@ vue + vuex + vue-router+webpack+es6+less
 
 
 
-#前端部署
+# 前端部署
 
-##1. 安装Nginx依赖
+## 1. 安装Nginx依赖
 ```
 安装Nginx所需的环境
 	Ubuntu可以通过apt源安装以下依赖库，CentOS可以通过yum安装
@@ -95,7 +95,7 @@ vue + vuex + vue-router+webpack+es6+less
 	nginx 不仅支持 http 协议，还支持 https（即在ssl协议上传输http），所以需要安装 OpenSSL 库。
 apt-get install openssl
 ```
-##2. 安装Nginx
+## 2. 安装Nginx
 ```
 #apt-get update
 #apt-get nginx
@@ -103,13 +103,13 @@ apt-get install openssl
 #nginx
 ```
 
-##3. 工程打包，放到服务器目录
+## 3. 工程打包，放到服务器目录
 ```
 #npm run build
 ```
 
-##4.修改nginx的配置文件，并重新启动nginx
+## 4.修改nginx的配置文件，并重新启动nginx
 ```
 #nginx -s reload
 ```
-##5.效果
+## 5.效果
