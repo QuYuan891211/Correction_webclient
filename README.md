@@ -1,4 +1,4 @@
-# neargoos 前端工程
+# 一. neargoos 前端工程
 
 ## 安装
 
@@ -73,7 +73,7 @@ vue + vuex + vue-router+webpack+es6+less
 
 
 
-# 前端部署
+# 二. 前端部署
 
 ## 1. 安装Nginx依赖
 ```
